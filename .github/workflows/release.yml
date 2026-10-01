@@ -1,0 +1,56 @@
+name: Release
+
+# Push a tag like v1.0.1 (matching package.json's version) to build the
+# Windows installer and portable exe and attach them to a GitHub Release.
+on:
+  push:
+    tags: ["v*"]
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v7
+      # No dependency cache: the exes people download are built from a clean install.
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 22
+          package-manager-cache: false
+      - name: Check the tag matches package.json
+        shell: bash
+        run: |
+          v=$(node -p "require('./package.json').version")
+          if [ "v$v" != "$GITHUB_REF_NAME" ]; then
+            echo "Tag $GITHUB_REF_NAME does not match package.json version $v"; exit 1
+          fi
+      - run: npm ci
+      - run: npm test
+      - run: npx electron-builder --win --publish never
+      # Every release ships both: the installer and the portable exe. Stop if either is missing.
+      - name: Check both exes were built
+        shell: bash
+        run: |
+          for f in dist/RFC-Report-Generator-Setup.exe dist/RFC-Report-Generator-Portable.exe; do
+            if [ ! -s "$f" ]; then echo "Missing or empty: $f"; exit 1; fi
+            echo "$f: $(stat -c %s "$f") bytes"
+          done
+      - uses: softprops/action-gh-release@v3
+        with:
+          draft: true
+          fail_on_unmatched_files: true
+          generate_release_notes: true
+          body: |
+            ## Download
+
+            | File | Use it when |
+            |------|-------------|
+            | `RFC-Report-Generator-Setup.exe` | You want to install the app. It adds a Start menu entry and opens `.rfcreport` files. |
+            | `RFC-Report-Generator-Portable.exe` | You want to run the app without installing it, for example from a USB drive. |
+
+            Windows 10 or 11, 64-bit. The exes are not code-signed, so Windows SmartScreen may show a warning on first run. Choose **More info**, then **Run anyway**.
+          files: |
+            dist/RFC-Report-Generator-Setup.exe
+            dist/RFC-Report-Generator-Portable.exe

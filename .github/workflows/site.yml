@@ -1,0 +1,42 @@
+name: Site
+
+# Publishes site/ to Cloudflare Pages (project rfc-report-generator), served at
+# rfc.blame-dns.dev. Needs two repo secrets:
+#   CLOUDFLARE_API_TOKEN   token with Account > Cloudflare Pages > Edit
+#   CLOUDFLARE_ACCOUNT_ID  the account ID from the Cloudflare dashboard
+on:
+  push:
+    branches: [main]
+    paths: ["site/**", "src/assets/icon-32.png", ".github/workflows/site.yml"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: site
+  cancel-in-progress: true
+
+env:
+  PROJECT: rfc-report-generator
+  CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+  CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 22
+      - name: Assemble the site
+        run: |
+          mkdir -p _site
+          cp site/index.html site/style.css site/screenshot.png _site/
+          cp src/assets/icon-32.png _site/
+      # Creates the Pages project on the first run; later runs find it already exists.
+      - name: Create the Pages project if needed
+        run: npx --yes wrangler@4 pages project create "$PROJECT" --production-branch=main || true
+      - name: Deploy
+        run: npx --yes wrangler@4 pages deploy _site --project-name="$PROJECT" --branch=main --commit-dirty=true

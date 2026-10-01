@@ -1,0 +1,74 @@
+/* The page is a plain-text memo, 72 columns wide, like the reports the app writes.
+   Always black on white, even when the system is in dark mode. */
+:root {
+  --paper: #ffffff;
+  --ink: #000000;
+  --muted: #6b6b6b;
+  --rule: #b8b8b8;
+  --link: #0000ee;
+  --visited: #551a8b;
+  color-scheme: only light;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html { -webkit-text-size-adjust: 100%; }
+
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: "Courier Prime", "Courier New", Courier, monospace;
+  /* 72 columns of a 0.6em-wide face = 43.2em. Shrink to fit narrow screens, down to a floor. */
+  font-size: clamp(8px, calc((100vw - 24px) / 43.2), 16px);
+  line-height: 1.35;
+}
+
+.memo {
+  width: 72ch;
+  max-width: 100%;
+  margin: 0 auto;
+  padding: 48px 0 64px;
+}
+
+pre {
+  margin: 0;
+  font: inherit;
+  white-space: pre;
+  /* Below the font-size floor, the memo scrolls sideways inside itself, never the page. */
+  overflow-x: auto;
+}
+
+.ruler {
+  color: var(--muted);
+  border-bottom: 1px dashed var(--rule);
+  padding-bottom: 0.35em;
+  margin-bottom: 1.35em;
+  user-select: none;
+}
+
+a { color: var(--link); }
+a:visited { color: var(--visited); }
+a:focus-visible { outline: 2px solid var(--link); outline-offset: 2px; }
+
+/* The screenshot is at most 816px wide, as in the README on GitHub, centered on the memo. */
+figure {
+  width: min(816px, calc(100vw - 32px));
+  margin: 1.35em 0 1.35em calc(50% - min(408px, 50vw - 16px));
+}
+figure img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border: 1px solid var(--rule);
+}
+figcaption {
+  margin-top: 1.35em;
+  text-align: center;
+}
+
+@media (max-width: 720px) {
+  body { padding: 0 12px; }
+  .memo { padding-top: 24px; }
+  figure { width: 100%; margin-left: 0; }
+}

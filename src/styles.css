@@ -1,0 +1,326 @@
+:root {
+  --bg: #c0c0c0;
+  --panel: #d4d0c8;
+  --field: #ffffff;
+  --ink: #000000;
+  --muted: #404040;
+  --hi: #ffffff;
+  --lo: #808080;
+  --term-bg: #ffffff;
+  --term-ink: #000000;
+  --warn-bg: #ffe066;
+  --dk: #000000;         /* outer shadow of a raised edge */
+  --lt: #dfdfdf;         /* outer light of a raised edge */
+  --title: #000080;
+  --title-ink: #ffffff;
+  --title-off: #808080;
+  --title-off-ink: #c0c0c0;
+  --hl: #000080;         /* menu highlight */
+  --hl-ink: #ffffff;
+  /* Win95 system font: 8pt MS Sans Serif. Chromium can't draw the bitmap .fon, so use its TrueType twin. */
+  --sys-font: 11px/1.2 "Microsoft Sans Serif", Tahoma, sans-serif;
+  /* Win95 bevels. Buttons: white then light grey on top-left, black then grey on bottom-right.
+     Windows and menus: light grey then white on top-left. */
+  --raised: inset -1px -1px var(--dk), inset 1px 1px var(--hi), inset -2px -2px var(--lo), inset 2px 2px var(--lt);
+  --pressed: inset 1px 1px var(--dk), inset -1px -1px var(--hi), inset 2px 2px var(--lo), inset -2px -2px var(--lt);
+  --raised-default: inset 0 0 0 1px var(--dk), inset -2px -2px var(--dk), inset 2px 2px var(--hi), inset -3px -3px var(--lo), inset 3px 3px var(--lt);
+  --pressed-default: inset 0 0 0 1px var(--dk), inset 0 0 0 2px var(--lo);
+  --window-edge: inset -1px -1px var(--dk), inset 1px 1px var(--lt), inset -2px -2px var(--lo), inset 2px 2px var(--hi);
+  /* Scrollbar arrows and size grip. Colors are baked into the images, so dark mode redefines them. */
+  --sb-up: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='7' height='4' shape-rendering='crispEdges'%3E%3Cpath fill='%23000000' d='M3 0h1v1h-1zM2 1h3v1h-3zM1 2h5v1h-5zM0 3h7v1h-7z'/%3E%3C/svg%3E");
+  --sb-down: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='7' height='4' shape-rendering='crispEdges'%3E%3Cpath fill='%23000000' d='M0 0h7v1h-7zM1 1h5v1h-5zM2 2h3v1h-3zM3 3h1v1h-1z'/%3E%3C/svg%3E");
+  --sb-left: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='4' height='7' shape-rendering='crispEdges'%3E%3Cpath fill='%23000000' d='M0 3h1v1h-1zM1 2h1v3h-1zM2 1h1v5h-1zM3 0h1v7h-1z'/%3E%3C/svg%3E");
+  --sb-right: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='4' height='7' shape-rendering='crispEdges'%3E%3Cpath fill='%23000000' d='M0 0h1v7h-1zM1 1h1v5h-1zM2 2h1v3h-1zM3 3h1v1h-1z'/%3E%3C/svg%3E");
+  --sb-grip: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' shape-rendering='crispEdges'%3E%3Cpath stroke='%23ffffff' d='M2 12L12 2M6 12L12 6M10 12L12 10'/%3E%3Cpath stroke='%23808080' d='M3 12L12 3M4 12L12 4M7 12L12 7M8 12L12 8M11 12L12 11M12 12L12 12'/%3E%3C/svg%3E");
+  /* Text box resize grip: dark ridges only, drawn on the white field. */
+  --field-grip: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' shape-rendering='crispEdges'%3E%3Cpath stroke='%23808080' d='M3 12L12 3M4 12L12 4M7 12L12 7M8 12L12 8M11 12L12 11'/%3E%3C/svg%3E");
+  box-sizing: border-box;
+}
+/* View > Theme sets nativeTheme.themeSource, which drives this query.
+   Keep --bg in sync with BG in main.js. */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #2b2b2b; --panel: #3a3a3a; --field: #1e1e1e; --ink: #e8e8e8;
+    --muted: #b0b0b0; --hi: #5a5a5a; --lo: #151515; --term-bg: #111111;
+    --term-ink: #d8d8d8; --warn-bg: #7a5a00;
+    --dk: #000000; --lt: #4a4a4a; --title: #00595e; --title-ink: #ffffff;
+    --title-off: #4a4a4a; --title-off-ink: #9a9a9a; --hl: #00595e; --hl-ink: #ffffff;
+    --sb-up: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='7' height='4' shape-rendering='crispEdges'%3E%3Cpath fill='%23e8e8e8' d='M3 0h1v1h-1zM2 1h3v1h-3zM1 2h5v1h-5zM0 3h7v1h-7z'/%3E%3C/svg%3E");
+    --sb-down: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='7' height='4' shape-rendering='crispEdges'%3E%3Cpath fill='%23e8e8e8' d='M0 0h7v1h-7zM1 1h5v1h-5zM2 2h3v1h-3zM3 3h1v1h-1z'/%3E%3C/svg%3E");
+    --sb-left: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='4' height='7' shape-rendering='crispEdges'%3E%3Cpath fill='%23e8e8e8' d='M0 3h1v1h-1zM1 2h1v3h-1zM2 1h1v5h-1zM3 0h1v7h-1z'/%3E%3C/svg%3E");
+    --sb-right: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='4' height='7' shape-rendering='crispEdges'%3E%3Cpath fill='%23e8e8e8' d='M0 0h1v7h-1zM1 1h1v5h-1zM2 2h1v3h-1zM3 3h1v1h-1z'/%3E%3C/svg%3E");
+    --sb-grip: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' shape-rendering='crispEdges'%3E%3Cpath stroke='%235a5a5a' d='M2 12L12 2M6 12L12 6M10 12L12 10'/%3E%3Cpath stroke='%23151515' d='M3 12L12 3M4 12L12 4M7 12L12 7M8 12L12 8M11 12L12 11M12 12L12 12'/%3E%3C/svg%3E");
+    /* Text box resize grip: dark ridges only, drawn on the field. */
+    --field-grip: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' shape-rendering='crispEdges'%3E%3Cpath stroke='%238a8a8a' d='M3 12L12 3M4 12L12 4M7 12L12 7M8 12L12 8M11 12L12 11'/%3E%3C/svg%3E");
+  }
+}
+*, *::before, *::after { box-sizing: inherit; }
+html, body { height: 100%; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font: 14px/1.4 Tahoma, Verdana, "Segoe UI", sans-serif;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+.scroll { flex: 1; min-height: 0; overflow: auto; }
+
+/* ---------- Win95 scrollbars ---------- */
+
+/* Raised bevel from gradients: scrollbar parts don't draw box-shadow.
+   The border is the outer light-grey/black edge; these add the inner white/grey edge. */
+:root {
+  --sb-bevel: linear-gradient(to right, var(--hi) 0 1px, transparent 1px),
+    linear-gradient(to bottom, var(--hi) 0 1px, transparent 1px),
+    linear-gradient(to left, var(--lo) 0 1px, transparent 1px),
+    linear-gradient(to top, var(--lo) 0 1px, transparent 1px);
+}
+::-webkit-scrollbar { width: 16px; height: 16px; }
+/* The track is a 50% dither of white and face grey. */
+::-webkit-scrollbar-track {
+  background: repeating-conic-gradient(var(--hi) 0 25%, var(--bg) 0 50%) 0 0 / 2px 2px;
+}
+::-webkit-scrollbar-thumb,
+::-webkit-scrollbar-button:single-button {
+  border: 1px solid;
+  border-color: var(--lt) var(--dk) var(--dk) var(--lt);
+  background-color: var(--bg);
+}
+::-webkit-scrollbar-thumb { background-image: var(--sb-bevel); min-height: 8px; min-width: 8px; }
+::-webkit-scrollbar-button:single-button { display: block; width: 16px; height: 16px; }
+::-webkit-scrollbar-button:single-button:vertical:decrement { background: var(--sb-up) center no-repeat, var(--sb-bevel); background-color: var(--bg); }
+::-webkit-scrollbar-button:single-button:vertical:increment { background: var(--sb-down) center no-repeat, var(--sb-bevel); background-color: var(--bg); }
+::-webkit-scrollbar-button:single-button:horizontal:decrement { background: var(--sb-left) center no-repeat, var(--sb-bevel); background-color: var(--bg); }
+::-webkit-scrollbar-button:single-button:horizontal:increment { background: var(--sb-right) center no-repeat, var(--sb-bevel); background-color: var(--bg); }
+/* Pressed: flat grey edge, arrow nudged down and right. */
+::-webkit-scrollbar-button:single-button:active { border-color: var(--lo); }
+::-webkit-scrollbar-button:single-button:vertical:decrement:active { background: var(--sb-up) calc(50% + 1px) calc(50% + 1px) no-repeat var(--bg); }
+::-webkit-scrollbar-button:single-button:vertical:increment:active { background: var(--sb-down) calc(50% + 1px) calc(50% + 1px) no-repeat var(--bg); }
+::-webkit-scrollbar-button:single-button:horizontal:decrement:active { background: var(--sb-left) calc(50% + 1px) calc(50% + 1px) no-repeat var(--bg); }
+::-webkit-scrollbar-button:single-button:horizontal:increment:active { background: var(--sb-right) calc(50% + 1px) calc(50% + 1px) no-repeat var(--bg); }
+::-webkit-scrollbar-corner { background: var(--bg); }
+::-webkit-resizer { background: var(--sb-grip) right bottom no-repeat var(--bg); }
+textarea::-webkit-resizer { background: var(--field-grip) right 1px bottom 1px no-repeat var(--field); }
+
+/* ---------- Win95 window chrome (src/chrome.js) ---------- */
+
+/* Raised window frame; dropped when maximized, as Windows does. */
+body.framed {
+  border: 2px solid;
+  border-color: var(--lt) var(--dk) var(--dk) var(--lt);
+  box-shadow: inset 1px 1px var(--hi), inset -1px -1px var(--lo);
+  padding: 2px;
+}
+body.framed { --chrome-h: 48px; }
+body.framed.maximized { border: 0; box-shadow: none; padding: 0; }
+.chrome { flex: none; user-select: none; }
+.titlebar {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  height: 18px;
+  padding: 0 2px;
+  background: var(--title);
+  color: var(--title-ink);
+  font: bold var(--sys-font);
+  -webkit-app-region: drag;
+}
+body.inactive .titlebar { background: var(--title-off); color: var(--title-off-ink); }
+.app-icon { flex: none; }
+.title-text { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.caption-btns { display: flex; flex: none; -webkit-app-region: no-drag; }
+.cap {
+  width: 16px;
+  height: 14px;
+  padding: 0;
+  display: grid;
+  place-items: center;
+  background: var(--bg);
+  box-shadow: var(--raised);
+}
+.cap:active { box-shadow: var(--pressed); padding: 0; }
+.cap:active svg { transform: translate(1px, 1px); }
+.cap.close { margin-left: 2px; }
+.cap svg { fill: var(--ink); }
+.cap .g-restore, .cap.restore .g-max { display: none; }
+.cap.restore .g-restore { display: block; }
+.menubar {
+  display: flex;
+  padding: 1px 0;
+  background: var(--bg);
+  font: var(--sys-font);
+  border-bottom: 1px solid var(--lo);
+  box-shadow: 0 1px var(--hi);
+  margin-bottom: 1px;
+}
+.mtop, .mtop:active { font: inherit; background: none; box-shadow: none; padding: 2px 6px; outline: none; }
+.mtop.open, .mtop.hot { background: var(--hl); color: var(--hl-ink); }
+.mdrop {
+  position: fixed;
+  z-index: 2500; /* above .dlg-overlay, so the right-click menu works in the Settings dialog */
+  min-width: 150px;
+  padding: 2px;
+  background: var(--bg);
+  font: var(--sys-font);
+  box-shadow: var(--window-edge);
+  user-select: none;
+}
+.mitem {
+  display: grid;
+  grid-template-columns: 18px 1fr auto 14px;
+  align-items: center;
+  height: 18px;
+  padding-right: 2px;
+  cursor: default;
+  white-space: nowrap;
+}
+.mitem.active { background: var(--hl); color: var(--hl-ink); }
+.mitem.disabled { color: var(--lo); text-shadow: 1px 1px var(--hi); }
+.mitem.disabled.active { background: none; }
+.macc { padding-left: 20px; }
+.mmark, .marrow { display: grid; place-items: center; }
+.msep { margin: 3px 0; border-top: 1px solid var(--lo); border-bottom: 1px solid var(--hi); }
+
+/* ---------- Win95 message box (src/dialog.js) ---------- */
+
+.dlg-overlay { position: fixed; inset: 0; z-index: 2000; }
+.dlg {
+  position: absolute;
+  min-width: 250px;
+  max-width: min(460px, calc(100vw - 16px));
+  padding: 3px;
+  background: var(--bg);
+  font: var(--sys-font);
+  box-shadow: var(--window-edge);
+  -webkit-app-region: no-drag;
+}
+.dlg-title {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  height: 18px;
+  padding: 0 2px 0 3px;
+  background: var(--title);
+  color: var(--title-ink);
+  font: bold var(--sys-font);
+  user-select: none;
+}
+body.inactive .dlg-title { background: var(--title-off); color: var(--title-off-ink); }
+.dlg-title-text { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.dlg-body { display: flex; gap: 16px; align-items: flex-start; padding: 12px 12px 4px; }
+.dlg-icon { flex: none; }
+.dlg-text { min-width: 0; padding-top: 1px; }
+.dlg-msg, .dlg-detail { margin: 0 0 11px; white-space: pre-wrap; overflow-wrap: anywhere; }
+.dlg-detail a { color: #0000ff; cursor: pointer; }
+.dlg-detail a:focus-visible { outline: 1px dotted var(--ink); }
+@media (prefers-color-scheme: dark) { .dlg-detail a { color: #8ab4f8; } }
+.dlg-buttons { display: flex; justify-content: center; gap: 6px; padding: 2px 12px 12px; }
+.dlg-buttons button { min-width: 75px; height: 23px; padding: 0 8px; font: var(--sys-font); background: var(--bg); }
+.dlg-buttons button:active { padding: 1px 7px 0 9px; }
+.dlg-buttons button:focus { outline: 1px dotted var(--ink); outline-offset: -5px; }
+/* The default button gets an extra black frame outside its bevel. */
+.dlg-buttons button.default { box-shadow: var(--raised-default); }
+.dlg-buttons button.default:active { box-shadow: var(--pressed-default); }
+
+/* Settings dialog: a message box with a form in place of the icon and text. */
+.dlg.wide { max-width: min(560px, calc(100vw - 16px)); }
+.dlg-form { display: grid; gap: 8px; width: 520px; max-width: 100%; max-height: calc(100vh - 120px); overflow: auto; padding: 1px; }
+.dlg-form .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px 8px; }
+.dlg-form .field > span { font: var(--sys-font); }
+.dlg-form input, .dlg-form select, .dlg-form textarea { font: var(--sys-font); }
+.dlg-form textarea { min-height: 3.6em; }
+.dlg-form fieldset { margin: 0; padding: 6px 8px 8px; background: var(--bg); }
+.dlg-form legend { font-weight: normal; }
+.dlg-form .tpl { width: 100%; border-collapse: collapse; margin-top: 4px; }
+.dlg-form .tpl th, .dlg-form .tpl td { padding: 1px 2px; font: var(--sys-font); }
+.dlg-form .tpl thead th { font-weight: normal; text-align: center; white-space: nowrap; }
+.dlg-form .tpl tbody th { font-weight: normal; text-align: left; white-space: nowrap; }
+.dlg-form .tpl td { text-align: center; }
+.dlg-form .tpl tbody tr:hover { background: var(--panel); }
+.dlg-form .tpl input { width: auto; margin: 0; vertical-align: middle; }
+.dlg-form p { margin: 0; color: var(--muted); }
+.wrap { max-width: 1400px; margin: 0 auto; padding: 12px; }
+.app { display: grid; gap: 12px; grid-template-columns: 1fr; }
+@media (min-width: 1050px) {
+  .app { grid-template-columns: minmax(0, 1fr) minmax(0, 620px); align-items: start; }
+  .preview-pane { position: sticky; top: 12px; }
+}
+fieldset {
+  margin: 0 0 12px;
+  background: var(--panel);
+  border: 2px solid;
+  border-color: var(--hi) var(--lo) var(--lo) var(--hi);
+  padding: 8px 10px 10px;
+  min-width: 0;
+}
+legend { font-weight: bold; padding: 0 4px; }
+legend label { display: inline-flex; gap: 6px; align-items: center; cursor: pointer; white-space: nowrap; }
+/* An unticked section is left out of the report. Collapse it to its title; the text is kept. */
+fieldset.off { padding-bottom: 0; }
+fieldset.off > :not(legend) { display: none; }
+fieldset.off > legend { font-weight: normal; color: var(--muted); }
+.grid { display: grid; gap: 8px; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); }
+.field { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.field > span { font-size: 12px; color: var(--muted); }
+input, select, textarea {
+  font: inherit;
+  color: var(--ink);
+  background: var(--field);
+  border: 2px solid;
+  border-color: var(--lo) var(--hi) var(--hi) var(--lo);
+  padding: 3px 5px;
+  width: 100%;
+  min-width: 0;
+}
+textarea { resize: vertical; min-height: 4.5em; }
+textarea.mono, .mono { font-family: "Courier New", Courier, monospace; }
+.rows { display: flex; flex-direction: column; gap: 6px; margin-bottom: 6px; }
+.row { display: grid; gap: 6px; align-items: center; }
+.hint { font-size: 12px; color: var(--muted); margin: 4px 0 0; }
+button {
+  font: inherit;
+  color: var(--ink);
+  background: var(--panel);
+  border: 0;
+  box-shadow: var(--raised);
+  padding: 5px 12px;
+  white-space: nowrap;
+}
+button:active { box-shadow: var(--pressed); padding: 6px 11px 4px 13px; }
+input:focus-visible, select:focus-visible, textarea:focus-visible {
+  outline: 1px dotted var(--ink); outline-offset: 1px;
+}
+/* Win95 draws keyboard focus as a dotted rectangle inside the button. */
+button:focus-visible { outline: 1px dotted var(--ink); outline-offset: -4px; }
+.toolbar { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 8px; align-items: center; }
+.toolbar .spacer { flex: 1; }
+.toolbar label { display: inline-flex; gap: 4px; align-items: center; font-size: 13px; }
+.term {
+  background: var(--term-bg);
+  color: var(--term-ink);
+  border: 2px solid;
+  border-color: var(--lo) var(--hi) var(--hi) var(--lo);
+  overflow: auto;
+  max-height: calc(100vh - 150px - var(--chrome-h, 0px));
+  min-height: 300px;
+}
+.term pre, .ruler {
+  margin: 0;
+  padding: 8px;
+  font: 13px/1.35 "Courier New", Courier, monospace;
+  white-space: pre;
+}
+.ruler { padding-bottom: 0; color: var(--muted); border-bottom: 1px dashed var(--lo); }
+.over { background: var(--warn-bg); }
+.status { font-size: 12px; margin-top: 6px; min-height: 1.4em; }
+.status.bad { font-weight: bold; }
+.mt { margin-top: 8px; }
+.mb { margin-bottom: 8px; }
+.filebar {
+  display: flex; gap: 8px; align-items: center;
+  font-size: 12px; color: var(--muted); margin-top: 4px; min-width: 0;
+}
+.filebar span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.filebar button { font-size: 12px; padding: 1px 6px; }

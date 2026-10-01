@@ -1,0 +1,45 @@
+{
+  "name": "rfc-report-generator",
+  "productName": "RFC Report Generator",
+  "version": "1.1.0",
+  "description": "Write incident and change reports in plain-text RFC style.",
+  "main": "main.js",
+  "author": "Michael McGahan",
+  "homepage": "https://rfc.blame-dns.dev",
+  "repository": { "type": "git", "url": "git+https://github.com/michaelmcg/RFC-Report-Generator.git" },
+  "bugs": { "url": "https://github.com/michaelmcg/RFC-Report-Generator/issues" },
+  "license": "MIT",
+  "engines": { "node": ">=22.12.0" },
+  "scripts": {
+    "start": "electron .",
+    "test": "node test/format.test.js",
+    "dist": "electron-builder --win",
+    "dist:portable": "electron-builder --win portable"
+  },
+  "devDependencies": {
+    "electron": "^44.4.5",
+    "electron-builder": "^26.15.3"
+  },
+  "build": {
+    "appId": "dev.blame-dns.rfc-report-generator",
+    "productName": "RFC Report Generator",
+    "files": ["main.js", "preload.js", "src/**/*", "package.json"],
+    "directories": { "output": "dist" },
+    "electronFuses": {
+      "runAsNode": false,
+      "enableCookieEncryption": true,
+      "enableNodeOptionsEnvironmentVariable": false,
+      "enableNodeCliInspectArguments": false,
+      "enableEmbeddedAsarIntegrityValidation": true,
+      "onlyLoadAppFromAsar": true
+    },
+    "fileAssociations": [
+      { "ext": "rfcreport", "name": "RFC Report", "description": "RFC Report draft", "role": "Editor", "icon": "src/assets/icon.ico" }
+    ],
+    "win": { "target": ["nsis", "portable"], "icon": "src/assets/icon.ico" },
+    "nsis": { "artifactName": "RFC-Report-Generator-Setup.exe", "oneClick": false, "perMachine": false, "allowToChangeInstallationDirectory": true },
+    "portable": { "artifactName": "RFC-Report-Generator-Portable.exe" },
+    "mac": { "target": "dmg" },
+    "linux": { "target": "AppImage" }
+  }
+}

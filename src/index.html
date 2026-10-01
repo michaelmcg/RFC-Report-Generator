@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self' data:; font-src 'self'">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>RFC Report Generator</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<header class="chrome" id="chrome" hidden>
+  <div class="titlebar">
+    <img class="app-icon" src="assets/icon-16.png" width="16" height="16" alt=""
+         srcset="assets/icon-16.png 1x, assets/icon-20.png 1.25x, assets/icon-24.png 1.5x, assets/icon-32.png 2x">
+    <span class="title-text" id="titleText"></span>
+    <div class="caption-btns">
+      <button type="button" class="cap" id="capMin" tabindex="-1" aria-label="Minimize">
+        <svg viewBox="0 0 8 7" width="8" height="7" shape-rendering="crispEdges"><path d="M1 5h6v2H1z"/></svg>
+      </button>
+      <button type="button" class="cap" id="capMax" tabindex="-1" aria-label="Maximize">
+        <svg class="g-max" viewBox="0 0 9 9" width="9" height="9" shape-rendering="crispEdges"><path d="M0 0h9v2H0zM0 2h1v7H0zM8 2h1v7H8zM1 8h7v1H1z"/></svg>
+        <svg class="g-restore" viewBox="0 0 8 9" width="8" height="9" shape-rendering="crispEdges"><path d="M2 0h6v2H2zM7 2h1v4H7zM6 5h1v1H6zM2 2h1v1H2zM0 3h6v2H0zM0 5h1v4H0zM5 5h1v4H5zM1 8h4v1H1z"/></svg>
+      </button>
+      <button type="button" class="cap close" id="capClose" tabindex="-1" aria-label="Close">
+        <svg viewBox="0 0 8 7" width="8" height="7" shape-rendering="crispEdges"><path d="M0 0h2v1H0zM6 0h2v1H6zM1 1h2v1H1zM5 1h2v1H5zM2 2h4v1H2zM3 3h2v1H3zM2 4h4v1H2zM1 5h2v1H1zM5 5h2v1H5zM0 6h2v1H0zM6 6h2v1H6z"/></svg>
+      </button>
+    </div>
+  </div>
+  <nav class="menubar" id="menubar" role="menubar" aria-label="Menu"></nav>
+</header>
+<main class="scroll">
+<div class="wrap">
+<div class="app">
+<form id="form">
+
+  <fieldset>
+    <legend>Header</legend>
+    <div class="grid">
+      <label class="field"><span>Team or group</span><input data-f="team"></label>
+      <label class="field"><span>Author</span><input data-f="author"></label>
+      <label class="field"><span>Report ID</span><input data-f="rid" placeholder="INC-0000"></label>
+      <label class="field"><span>Organization</span><input data-f="org"></label>
+      <label class="field"><span>Category</span>
+        <select data-f="category">
+          <option>Incident</option><option>Change</option><option>Upgrade</option>
+          <option>Implementation</option><option>Informational</option>
+        </select></label>
+      <label class="field"><span>Date</span><input data-f="date" type="date"></label>
+      <label class="field"><span>Status</span>
+        <select data-f="status"></select></label>
+    </div>
+    <div class="grid mt">
+      <label class="field"><span>Title</span><input data-f="title"></label>
+    </div>
+  </fieldset>
+
+  <fieldset data-sec="abstract">
+    <legend><label><input type="checkbox" data-f="sec_abstract"> Abstract</label></legend>
+    <label class="field"><span>One or two sentences; the outcome in brief</span><textarea data-f="abstract"></textarea></label>
+  </fieldset>
+
+  <fieldset data-sec="memo">
+    <legend><label><input type="checkbox" data-f="sec_memo"> Status of this memo</label></legend>
+    <label class="field"><span>Audience, and whether it may change</span><textarea data-f="memo"></textarea></label>
+  </fieldset>
+
+  <fieldset data-sec="summary">
+    <legend><label><input type="checkbox" data-f="sec_summary"> Summary</label></legend>
+    <textarea data-f="summary" rows="4" aria-label="Summary"></textarea>
+  </fieldset>
+
+  <fieldset data-sec="env">
+    <legend><label><input type="checkbox" data-f="sec_env"> Environment</label></legend>
+    <div class="rows" data-list="env"></div>
+    <button type="button" data-add="env">Add row</button>
+  </fieldset>
+
+  <fieldset data-sec="versions">
+    <legend><label><input type="checkbox" data-f="sec_versions"> Versions</label></legend>
+    <div class="rows" data-list="versions"></div>
+    <button type="button" data-add="versions">Add row</button>
+  </fieldset>
+
+  <fieldset data-sec="timeline">
+    <legend><label><input type="checkbox" data-f="sec_timeline"> Timeline</label></legend>
+    <label class="field mb"><span>Time zone</span><input data-f="tz" placeholder="Central"></label>
+    <div class="rows" data-list="timeline"></div>
+    <button type="button" data-add="timeline">Add event</button>
+  </fieldset>
+
+  <fieldset data-sec="impact">
+    <legend><label><input type="checkbox" data-f="sec_impact"> Impact</label></legend>
+    <div class="rows" data-list="impact"></div>
+    <button type="button" data-add="impact">Add row</button>
+  </fieldset>
+
+  <fieldset data-sec="plan">
+    <legend><label><input type="checkbox" data-f="sec_plan"> Implementation plan</label></legend>
+    <textarea data-f="plan" rows="4" aria-label="Implementation plan"></textarea>
+  </fieldset>
+
+  <fieldset data-sec="root">
+    <legend><label><input type="checkbox" data-f="sec_root"> Root cause</label></legend>
+    <textarea data-f="root" rows="4" aria-label="Root cause"></textarea>
+    <label class="field mt"><span>Contributing factors (one per line)</span><textarea data-f="factors" rows="3"></textarea></label>
+  </fieldset>
+
+  <fieldset data-sec="resolution">
+    <legend><label><input type="checkbox" data-f="sec_resolution"> Resolution</label></legend>
+    <textarea data-f="resolution" rows="4" aria-label="Resolution"></textarea>
+    <label class="field mt"><span>Commands or config (kept exactly as typed, not wrapped)</span><textarea class="mono" data-f="commands" rows="3" spellcheck="false"></textarea></label>
+  </fieldset>
+
+  <fieldset data-sec="validation">
+    <legend><label><input type="checkbox" data-f="sec_validation"> Testing and validation</label></legend>
+    <textarea data-f="validation" rows="3" aria-label="Testing and validation"></textarea>
+  </fieldset>
+
+  <fieldset data-sec="rollback">
+    <legend><label><input type="checkbox" data-f="sec_rollback"> Rollback plan</label></legend>
+    <textarea data-f="rollback" rows="3" aria-label="Rollback plan"></textarea>
+  </fieldset>
+
+  <fieldset data-sec="actions">
+    <legend><label><input type="checkbox" data-f="sec_actions"> Action items</label></legend>
+    <div class="rows" data-list="actions"></div>
+    <button type="button" data-add="actions">Add action</button>
+    <p class="hint">IDs (A1, A2, ...) are numbered automatically.</p>
+  </fieldset>
+
+  <fieldset data-sec="approvals">
+    <legend><label><input type="checkbox" data-f="sec_approvals"> Approvals</label></legend>
+    <div class="rows" data-list="approvals"></div>
+    <button type="button" data-add="approvals">Add approval</button>
+  </fieldset>
+
+  <fieldset data-sec="security">
+    <legend><label><input type="checkbox" data-f="sec_security"> Security considerations</label></legend>
+    <textarea data-f="security" rows="3" aria-label="Security considerations" placeholder="Leave blank for &quot;None identified.&quot;"></textarea>
+  </fieldset>
+
+  <fieldset data-sec="refs">
+    <legend><label><input type="checkbox" data-f="sec_refs"> References</label></legend>
+    <div class="rows" data-list="refs"></div>
+    <button type="button" data-add="refs">Add reference</button>
+  </fieldset>
+
+  <fieldset data-sec="addr">
+    <legend><label><input type="checkbox" data-f="sec_addr"> Author's address</label></legend>
+    <div class="grid">
+      <label class="field"><span>Name</span><input data-f="a_name"></label>
+      <label class="field"><span>Title</span><input data-f="a_title"></label>
+      <label class="field"><span>Organization</span><input data-f="a_org"></label>
+      <label class="field"><span>Email</span><input data-f="a_email" type="email"></label>
+    </div>
+  </fieldset>
+</form>
+
+<section class="preview-pane" aria-label="Report preview">
+  <div class="toolbar">
+    <button type="button" id="save">Save</button>
+    <button type="button" id="exportTxt">Export .txt</button>
+    <button type="button" id="exportHtml">Export .html</button>
+    <button type="button" id="copyText">Copy text</button>
+    <span class="spacer"></span>
+    <label><input type="checkbox" id="showRuler" checked> Ruler</label>
+  </div>
+  <div class="term">
+    <div class="ruler" id="ruler" aria-hidden="true"></div>
+    <pre id="out"></pre>
+  </div>
+  <div class="status" id="status" role="status"></div>
+  <div class="filebar">
+    <span id="filePath">Not saved yet</span>
+    <button type="button" id="reveal" hidden>Show in folder</button>
+  </div>
+</section>
+</div>
+</div>
+</main>
+
+<template id="settingsTpl">
+<div class="dlg-form">
+  <p>New reports start with these values. The open report is not changed.</p>
+  <fieldset>
+    <legend>Header</legend>
+    <div class="grid">
+      <label class="field"><span>Team or group</span><input data-p="team"></label>
+      <label class="field"><span>Author</span><input data-p="author"></label>
+      <label class="field"><span>Organization</span><input data-p="org"></label>
+      <label class="field"><span>Category</span><select data-p="category"></select></label>
+      <label class="field"><span>Time zone</span><input data-p="tz" placeholder="Central"></label>
+    </div>
+    <label class="field mt"><span>Status of this memo</span><textarea data-p="memo" rows="2"></textarea></label>
+    <label class="field mt"><span>Status choices, one per line (the first is the default)</span><textarea data-p="statuses" rows="3" spellcheck="false"></textarea></label>
+  </fieldset>
+  <fieldset>
+    <legend>Author's address</legend>
+    <div class="grid">
+      <label class="field"><span>Name</span><input data-p="a_name"></label>
+      <label class="field"><span>Title</span><input data-p="a_title"></label>
+      <label class="field"><span>Organization</span><input data-p="a_org"></label>
+      <label class="field"><span>Email</span><input data-p="a_email" type="email"></label>
+    </div>
+  </fieldset>
+  <fieldset>
+    <legend>Sections for each category</legend>
+    <p>Picking a category in a report ticks these sections.</p>
+    <table class="tpl" data-templates></table>
+  </fieldset>
+</div>
+</template>
+
+<script src="report.js"></script>
+<script src="dialog.js"></script>
+<script src="settings.js"></script>
+<script src="app.js"></script>
+<script src="chrome.js"></script>
+</body>
+</html>
