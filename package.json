@@ -1,7 +1,7 @@
 {
   "name": "rfc-report-generator",
   "productName": "RFC Report Generator",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "Write incident and change reports in plain-text RFC style.",
   "main": "main.js",
   "author": "Michael McGahan",

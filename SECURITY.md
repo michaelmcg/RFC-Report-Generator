@@ -31,8 +31,8 @@ runs code from a `.rfcreport` file is in scope.
 
 ### Out of scope
 
-- The release exes are not code-signed, so Windows SmartScreen may warn on
-  first run. This is known.
+- Windows SmartScreen warnings. The release exes are signed, but a new
+  release can still warn until it builds a reputation.
 - Attacks that need local admin rights, or a modified install or app data
   folder.
 - Bugs in Electron or Chromium themselves. Report those upstream. Tell us if

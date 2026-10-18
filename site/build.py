@@ -74,7 +74,7 @@ doc += sec("ABSTRACT", wrap(
     "lays out the report as you type. It was probably DNS."))
 
 doc += sec("STATUS OF THIS MEMO", wrap(
-    "This memo describes version 1.1.0. It is final, and distribution is unlimited."))
+    "This memo describes version 1.1.1. It is final, and distribution is unlimited."))
 
 doc += sec("1. DOWNLOAD",
     leaders([("Installer", L("INSTALLER")), ("Portable", L("PORTABLE")), ("Older versions", "See [RELEASES] below")])
@@ -82,8 +82,7 @@ doc += sec("1. DOWNLOAD",
     + wrap("The installer adds a Start menu entry and opens .rfcreport files when you "
            "double-click them. The portable version runs from anywhere, with nothing to install.")
     + [""]
-    + wrap("The app is not code-signed yet, so Windows SmartScreen may warn on first run. "
-           "Choose More info, then Run anyway."))
+    + wrap("The app is code-signed by Michael McGahan."))
 
 doc += sec("2. WHAT IT LOOKS LIKE", ["{{FIGURE}}"])
 

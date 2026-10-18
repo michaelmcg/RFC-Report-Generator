@@ -32,8 +32,7 @@ or visit the homepage at <https://rfc.blame-dns.dev>.
 | `RFC-Report-Generator-Setup.exe`    | You want a Start menu entry and file links    |
 | `RFC-Report-Generator-Portable.exe` | You want to run it from a folder or USB drive |
 
-It runs on Windows 10 or 11, 64-bit. The exes are not code-signed yet, so
-SmartScreen may frown at you on first run. Choose More info, then Run anyway.
+It runs on Windows 10 or 11, 64-bit. The exes are code-signed by Michael McGahan.
 
 ## What's in the box
 
