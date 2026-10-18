@@ -237,6 +237,15 @@ function listen(channel, fn) {
 
 // ---------- file handling ----------
 
+// Report paths main has handed to the page this session (open, save, recover). Save without a
+// dialog, show-in-folder and the recovery copy only take one of these, so the page can't pick
+// its own path.
+const grantedPaths = new Set();
+
+function isGranted(p) {
+  return typeof p === "string" && grantedPaths.has(p);
+}
+
 async function readReport(p) {
   const raw = await fs.readFile(p, "utf8");
   const json = JSON.parse(raw);
@@ -249,6 +258,7 @@ async function readReport(p) {
 async function openPathInWindow(p) {
   try {
     send("open-path", await readReport(p));
+    grantedPaths.add(p);
     addRecent(p);
   } catch (err) {
     removeRecent(p);
@@ -302,7 +312,7 @@ listen("recovery:save", (_e, data) => {
   if (!data || typeof data.state !== "object" || !data.state) return;
   const body = JSON.stringify({
     savedAt: new Date().toISOString(),
-    filePath: typeof data.filePath === "string" ? data.filePath : null,
+    filePath: isGranted(data.filePath) ? data.filePath : null,
     state: data.state
   });
   recoveryOp(async () => {
@@ -334,8 +344,12 @@ async function offerRecovery() {
     defaultId: 0,
     cancelId: 0 // Esc keeps the work
   });
-  if (r === 0) send("recover", { state: data.state, filePath: data.filePath, savedAt: data.savedAt });
-  else await recoveryOp(() => fs.unlink(recoveryPath()));
+  if (r === 0) {
+    // Main wrote this file, and only with a granted path, so the path can be granted again.
+    const filePath = typeof data.filePath === "string" ? data.filePath : null;
+    if (filePath) grantedPaths.add(filePath);
+    send("recover", { state: data.state, filePath, savedAt: data.savedAt });
+  } else await recoveryOp(() => fs.unlink(recoveryPath()));
 }
 
 handle("report:open", async () => {
@@ -347,6 +361,7 @@ handle("report:open", async () => {
   if (r.canceled || !r.filePaths[0]) return { canceled: true };
   try {
     const report = await readReport(r.filePaths[0]);
+    grantedPaths.add(report.path);
     addRecent(report.path);
     return report;
   } catch (err) {
@@ -355,7 +370,8 @@ handle("report:open", async () => {
 });
 
 handle("report:save", async (_e, { filePath, saveAs, suggestedName, state }) => {
-  let target = filePath;
+  // A path the page didn't get from main asks the user, the same as Save As.
+  let target = isGranted(filePath) ? filePath : null;
   if (!target || saveAs) {
     const r = await dialog.showSaveDialog(win, {
       title: "Save report",
@@ -368,6 +384,7 @@ handle("report:save", async (_e, { filePath, saveAs, suggestedName, state }) => 
   try {
     const body = JSON.stringify({ format: FORMAT, version: 1, savedAt: new Date().toISOString(), state }, null, 2);
     await fs.writeFile(target, body, "utf8");
+    grantedPaths.add(target);
     addRecent(target);
     return { path: target };
   } catch (err) {
@@ -396,7 +413,7 @@ handle("export", async (_e, { kind, content, suggestedName, filePath }) => {
 
 handle("confirm-discard", () => askSave("Save changes to the current report?"));
 
-handle("show-in-folder", (_e, p) => { if (p) shell.showItemInFolder(p); });
+handle("show-in-folder", (_e, p) => { if (isGranted(p)) shell.showItemInFolder(p); });
 
 listen("dirty", (_e, value) => {
   dirty = !!value;
