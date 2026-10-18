@@ -1,5 +1,8 @@
 blank_issues_enabled: false
 contact_links:
+  - name: Report a security vulnerability
+    url: https://github.com/michaelmcg/RFC-Report-Generator/security/advisories/new
+    about: Report it privately. Do not open a public issue.
   - name: Homepage
     url: https://rfc.blame-dns.dev
     about: Downloads and a feature overview.

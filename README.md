@@ -106,6 +106,8 @@ Check again. Then untick the Root cause section and write it up anyway.
   and the portable exe.
 - **GitHub Actions** runs the tests and builds each release.
 
+To report a security problem, see [SECURITY.md](SECURITY.md).
+
 ## Build it yourself
 
 You need Node.js 22.12 or later.
