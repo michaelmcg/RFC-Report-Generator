@@ -1,7 +1,10 @@
 name: Release
 
 # Push a tag like v1.0.1 (matching package.json's version) to build the
-# Windows installer and portable exe and attach them to a GitHub Release.
+# Windows installer and portable exe, sign them with Microsoft Artifact Signing
+# (formerly Azure Trusted Signing) and attach them to a GitHub Release.
+# Signing needs three repo secrets from the signing app registration:
+#   AZURE_TENANT_ID, AZURE_CLIENT_ID, AZURE_CLIENT_SECRET
 on:
   push:
     tags: ["v*"]
@@ -28,7 +31,13 @@ jobs:
           fi
       - run: npm ci
       - run: npm test
-      - run: npx electron-builder --win --publish never
+      # Only this step sees the signing credentials, not `npm ci` and its install scripts.
+      # dist:signed stops if it can't sign, so an unsigned build never ships.
+      - run: npm run dist:signed
+        env:
+          AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+          AZURE_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+          AZURE_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
       # Every release ships both: the installer and the portable exe. Stop if either is missing.
       - name: Check both exes were built
         shell: bash
@@ -37,6 +46,16 @@ jobs:
             if [ ! -s "$f" ]; then echo "Missing or empty: $f"; exit 1; fi
             echo "$f: $(stat -c %s "$f") bytes"
           done
+      # Checks the CN alone, not the full subject: a revalidation with a new address changes the rest.
+      - name: Check the exes are signed
+        shell: pwsh
+        run: |
+          foreach ($f in "dist/RFC-Report-Generator-Setup.exe", "dist/RFC-Report-Generator-Portable.exe", "dist/win-unpacked/RFC Report Generator.exe") {
+            $sig = Get-AuthenticodeSignature $f
+            if ($sig.Status -ne 'Valid') { throw "$f is not validly signed: $($sig.Status)" }
+            if ($sig.SignerCertificate.Subject -notmatch '^CN=Michael McGahan,') { throw "$f is signed by someone else: $($sig.SignerCertificate.Subject)" }
+            Write-Host "${f}: $($sig.SignerCertificate.Subject)"
+          }
       - uses: softprops/action-gh-release@v3
         with:
           draft: true
@@ -50,7 +69,7 @@ jobs:
             | `RFC-Report-Generator-Setup.exe` | You want to install the app. It adds a Start menu entry and opens `.rfcreport` files. |
             | `RFC-Report-Generator-Portable.exe` | You want to run the app without installing it, for example from a USB drive. |
 
-            Windows 10 or 11, 64-bit. The exes are not code-signed, so Windows SmartScreen may show a warning on first run. Choose **More info**, then **Run anyway**.
+            Windows 10 or 11, 64-bit. The exes are signed by Michael McGahan.
           files: |
             dist/RFC-Report-Generator-Setup.exe
             dist/RFC-Report-Generator-Portable.exe

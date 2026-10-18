@@ -14,7 +14,8 @@
     "start": "electron .",
     "test": "node test/format.test.js",
     "dist": "electron-builder --win",
-    "dist:portable": "electron-builder --win portable"
+    "dist:portable": "electron-builder --win portable",
+    "dist:signed": "electron-builder --win --publish never --config.forceCodeSigning=true --config.win.azureSignOptions.endpoint=https://cus.codesigning.azure.net/ --config.win.azureSignOptions.codeSigningAccountName=michaelmcgahan --config.win.azureSignOptions.certificateProfileName=michaelmcg \"--config.win.azureSignOptions.publisherName=Michael McGahan\""
   },
   "devDependencies": {
     "electron": "^44.4.5",
