@@ -18,7 +18,7 @@
     "dist:signed": "electron-builder --win --publish never --config.forceCodeSigning=true --config.win.azureSignOptions.endpoint=https://cus.codesigning.azure.net/ --config.win.azureSignOptions.codeSigningAccountName=michaelmcgahan --config.win.azureSignOptions.certificateProfileName=michaelmcg \"--config.win.azureSignOptions.publisherName=Michael McGahan\""
   },
   "devDependencies": {
-    "electron": "^44.4.5",
+    "electron": "^44.9.1",
     "electron-builder": "^26.15.3"
   },
   "build": {
